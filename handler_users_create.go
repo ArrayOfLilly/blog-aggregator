@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -24,6 +25,7 @@ func (apiCfg *apiConfig) handleUsersCreate(w http.ResponseWriter, r *http.Reques
 	}
 
 	uuid := uuid.New()
+	fmt.Printf("uuid: %s", uuid)
 
 	user, err := apiCfg.DB.CreateUser(r.Context(), database.CreateUserParams{
 		ID:        uuid,
@@ -32,7 +34,8 @@ func (apiCfg *apiConfig) handleUsersCreate(w http.ResponseWriter, r *http.Reques
 		Name:      params.Name,
 	})
 	if err != nil {
-		respondWithError(w, http.StatusInternalServerError, "Couldn't create user")
+		// respondWithError(w, http.StatusInternalServerError, "Couldn't create user")
+		respondWithError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 
