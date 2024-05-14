@@ -9,8 +9,7 @@ import (
 func (apiCfg *apiConfig) handleUsersGet(w http.ResponseWriter, r *http.Request) {
 	apiKey, err := auth.GetApiKey(r.Header)
 	if err != nil {
-		// respondWithError(w, http.StatusUnauthorized, "Couldn't find API key")
-		respondWithError(w, http.StatusUnauthorized, err.Error())
+		respondWithError(w, http.StatusUnauthorized, "Couldn't find API key")
 		return
 	}
 	
