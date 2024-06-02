@@ -7,8 +7,8 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/joho/godotenv"
 	"github.com/ArrayOfLilly/blog-aggregator/internal/database"
+	"github.com/joho/godotenv"
 
 	_ "github.com/lib/pq"
 )
@@ -48,9 +48,11 @@ func main() {
 	mux.HandleFunc("GET /v1/readiness", handlerReady)
 	mux.HandleFunc("GET /v1/err", handlerErr)
 
-	mux.HandleFunc("POST /v1/users", apiCfg.handleUsersCreate)
-	mux.HandleFunc("GET /v1/users", apiCfg.handleUsersGet)
+	mux.HandleFunc("POST /v1/users", apiCfg.handlerUserCreate)
+	mux.HandleFunc("GET /v1/users", apiCfg.middlewareAuth(apiCfg.handlerUsersGet))
 
+	mux.HandleFunc("POST /v1/feeds", apiCfg.middlewareAuth(apiCfg.handlerFeedCreate))
+	mux.HandleFunc("GET /v1/feeds", apiCfg.handlerFeedsGet)
 
 	svr := &http.Server{
 		Addr: ":" + port,

@@ -9,8 +9,11 @@ import (
 	"github.com/google/uuid"
 )
 
+func (cfg *apiConfig) handlerUsersGet(w http.ResponseWriter, r *http.Request, user database.User) {
+	respondWithJSON(w, http.StatusOK, databaseUserToUser(user))
+}
 
-func (apiCfg *apiConfig) handleUsersCreate(w http.ResponseWriter, r *http.Request) {
+func (apiCfg *apiConfig) handlerUserCreate(w http.ResponseWriter, r *http.Request) {
 	type parameters struct {
 		Name string `json:"name"`
 	}
