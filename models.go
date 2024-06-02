@@ -1,6 +1,7 @@
 package main
 
 import (
+	"database/sql"
 	"time"
 
 	"github.com/ArrayOfLilly/blog-aggregator/internal/database"
@@ -26,12 +27,13 @@ func databaseUserToUser(user database.User) User {
 }
 
 type Feed struct {
-	ID        uuid.UUID `json:"id"`
-	Name      string    `json:"name"`
-	Url       string	`json:"url"`
-	UserID    uuid.UUID `json:"user_id"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
+	ID        uuid.UUID 	 `json:"id"`
+	Name      string    	 `json:"name"`
+	Url       string		 `json:"url"`
+	UserID    uuid.UUID 	 `json:"user_id"`
+	CreatedAt time.Time 	 `json:"created_at"`
+	UpdatedAt time.Time 	 `json:"updated_at"`
+	LastFetchedAt *time.Time `json:"last_fetched_at"`
 }
 
 func databaseFeedToFeed(feed database.Feed) Feed {
@@ -42,6 +44,7 @@ func databaseFeedToFeed(feed database.Feed) Feed {
 		UserID: feed.UserID,
 		CreatedAt: feed.CreatedAt,
 		UpdatedAt: feed.UpdatedAt,
+		LastFetchedAt: nullTimeToTimePtr(feed.LastFetchedAt),
 	}
 }
 
@@ -63,3 +66,9 @@ func databaseFeedFollowToFeedFollow(feed_follow database.FeedFollow) FeedFollow 
 	}
 }
 
+func nullTimeToTimePtr(t sql.NullTime) *time.Time {
+	if t.Valid {
+		return &t.Time
+	}
+	return nil
+}

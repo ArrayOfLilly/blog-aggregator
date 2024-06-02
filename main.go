@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/ArrayOfLilly/blog-aggregator/internal/database"
 	"github.com/joho/godotenv"
@@ -63,6 +64,10 @@ func main() {
 		Addr: ":" + port,
 		Handler: mux,
 	}
+
+	const collectionConcurrency = 10
+	const collectionInterval = time.Minute
+	go startScraping(dbQueries, collectionConcurrency, collectionInterval)
 
 	fmt.Printf("Server is started. Serving files on %s and listening on %s port\n", filepathRoot, port)
 	log.Fatal(svr.ListenAndServe())
